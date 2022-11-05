@@ -1,0 +1,99 @@
+@startuml
+
+title "Data model diagram"
+
+package register {
+abstract class Register {
+    +timestamp created
+    +timestamp sinchronized
+} 
+
+note top of Register
+  This abstract class register
+  data and time a register was
+  created.
+  Also, if so, data and time that
+  register was synchronized with
+  remote server
+end note
+
+note left of Register::created
+  This membre register the 
+  data and time that register
+  was created
+end note
+
+note left of Register::sinchronized
+  This nullable member register the
+  data and time that register was
+  synchronized with remote server
+end note
+}
+
+package operations {
+class CheckOperation extends Register {
+    +boolean isCheckInOperation
+    +timestamp tsOperation
+}
+
+note bottom of CheckOperation
+A CheckOperation is a check-in or check-out
+end note
+
+note right of CheckOperation::isCheckInOperation
+  Indicates if this operation was
+  a check-in (true) or a check-out (false)
+end note
+
+note right of CheckOperation::tsOperation
+  Indicates the data and time this check
+  operation was done
+end note
+}
+
+package state {
+    class CurrentState <<Singleton>> {
+        +timestamp lastChanged
+        +CheckState currentCheckState
+        +timestamp lastCheckOperation
+        +timestamp lastSynchronization
+        +long pendingSynchroRegisters
+    }
+    enum CheckState {
+        CHECKEDOUT
+        CHECKEDIN
+    }
+    
+    note top of CurrentState
+       This singleton class holds information about
+       the current checked state, when was changed by last time
+       when was made the last check operation and when was
+       made the last syncrhonization operation
+    end note
+
+    note right of CurrentState::lastChanged
+       This member holds the last time any item of CurrentState
+       was changed
+    end note
+
+    note right of CurrentState::currentCheckState
+       This member holds the current check state.
+       Is changed on every check operation in order
+       to reflect the current state
+    end note
+
+    note right of CurrentState::lastCheckOperation
+       When was made the last check operation
+    end note
+
+    note right of CurrentState::lastSynchronization
+       When was made (if there was) the last syncrhonization
+       operation
+    end note
+
+    note right of CurrentState::pendingSynchroRegisters
+       The number of pending registers to be synchronized
+    end note
+}
+
+@enduml

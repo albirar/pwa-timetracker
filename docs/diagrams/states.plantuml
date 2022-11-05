@@ -1,0 +1,48 @@
+@startuml
+title "Timetracker state diagram"
+
+note "The timetracker is an infinite state\nmachine, with one initial state but no end." as N1
+
+[*] --> CheckedOut : initial
+note top of CheckedOut
+State named 'CheckedOut' means is out of office
+end note
+CheckedOut --> CheckedIn : AutoCheck
+note on link
+AutoCheck is
+made with the 
+current date 
+and time
+end note
+CheckedIn --> CheckedOut : AutoCheck
+note on link
+AutoCheck is
+made with the 
+current date 
+and time
+end note
+CheckedIn --> CheckedOut : ManualCheck
+note on link
+Manual Check enables
+to register manually a
+forgotten Autocheck operation.
+Is made with a specific
+indicated date and time,
+but cannot be equals or
+after current time
+end note
+CheckedOut --> CheckedIn : ManualCheck
+note on link
+Manual Check enables
+to register manually a
+forgotten Autocheck operation.
+Is made with a specific
+indicated date and time,
+but cannot be equals or
+after current time
+end note
+
+note bottom of CheckedIn
+State named 'CheckedIn' means is in office
+end note
+@enduml
