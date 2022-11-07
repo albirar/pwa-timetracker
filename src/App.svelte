@@ -1,17 +1,21 @@
 <script lang="ts">
   import svelteLogo from './assets/svelte.svg'
-  import Counter from './lib/Counter.svelte'
+  import Autocheck from './lib/Autocheck.svelte';
+  import { CurrentStateSingleton, type CheckState } from './lib/data-models';
+  import StateHeader from './lib/StateHeader.svelte';
+
+  export let state : CheckState = CurrentStateSingleton.getInstance().currentCheckState;
 </script>
 
 <svelte:head>
-  <title>Timetracker PWA application</title>
+  <title>Timetracker application</title>
 </svelte:head>
 
 <main>
-  <h1>Timetracker PWA application</h1>
+  <StateHeader bind:state={state}></StateHeader>
 
   <div class="card">
-    <Counter />
+    <Autocheck bind:state={state}/>
   </div>
 
 </main>

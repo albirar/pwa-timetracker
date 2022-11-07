@@ -5,7 +5,7 @@ title "Data model diagram"
 package register {
 abstract class Register {
     +timestamp created
-    +timestamp sinchronized
+    +timestamp synchronized
 } 
 
 note top of Register
@@ -23,7 +23,7 @@ note left of Register::created
   was created
 end note
 
-note left of Register::sinchronized
+note left of Register::synchronized
   This nullable member register the
   data and time that register was
   synchronized with remote server
