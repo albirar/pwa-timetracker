@@ -1,42 +1,47 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import {
-    ApiCheckOperationsSingleton,
-    type CurrentState,
-    type ApiCheckOperations,
-    CurrentStateSingleton,
+    CheckEventImpl,
     CheckState,
-  } from "./data-models";
+    getApiInstance,
+    type CheckEvent,
+  } from "./timetracker_api";
 
-  const dispatch = createEventDispatcher();
+  let idSubscriber: number;
+  let state: CheckState;
+  let operationStr: string;
 
-  export let state: CheckState = CurrentStateSingleton.getInstance().currentCheckState;
-  $: stateStr = state == CheckState.CheckedIn ? "Sortir" : "Entrar";
+  onMount(() => {
+    updateState();
+    idSubscriber = getApiInstance().subscribeToChanges(updateState);
+  });
+  onDestroy(() => {
+    getApiInstance().unSubscribeToChanges(idSubscriber);
+  });
 
-  let operation: ApiCheckOperations = ApiCheckOperationsSingleton.getInstance();
-
-  const autoCheckOperation = () => {
-    state = operation.autoCheckOperation();
-    dispatch('state', {
-        stateValue: state
-    });
-  };
+  function updateState(event?: CheckEvent) {
+    if (event == undefined) {
+      event = new CheckEventImpl(null, getApiInstance().currentState);
+    }
+    state = event.currentState;
+    if (state == CheckState.CheckedInState) {
+      operationStr = "sortir";
+    } else {
+      operationStr = "entrar";
+    }
+  }
+  function autoCheckOperation() {
+    getApiInstance().autoCheckOperation();
+  }
 </script>
 
 <button
   on:click={autoCheckOperation}
-  class:state-dins={state === CheckState.CheckedIn}
-  class:state-fora={state === CheckState.CheckedOut}
+  class:text-bg-success={state === CheckState.CheckedInState}
+  class:bg-warning={state === CheckState.CheckedOutState}
 >
-  {stateStr}
+  {operationStr}
 </button>
 
 <style>
-  .state-dins {
-    background-color: orange;
-  }
-
-  .state-fora {
-    background-color: green;
-  }
 </style>

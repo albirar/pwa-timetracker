@@ -1,10 +1,7 @@
 <script lang="ts">
-  import svelteLogo from './assets/svelte.svg'
   import Autocheck from './lib/Autocheck.svelte';
-  import { CurrentStateSingleton, type CheckState } from './lib/data-models';
   import StateHeader from './lib/StateHeader.svelte';
 
-  export let state : CheckState = CurrentStateSingleton.getInstance().currentCheckState;
 </script>
 
 <svelte:head>
@@ -12,10 +9,18 @@
 </svelte:head>
 
 <main>
-  <StateHeader bind:state={state}></StateHeader>
+  <div class="container-fluid text-center">
 
-  <div class="card">
-    <Autocheck bind:state={state}/>
+    <div class="d-grid gap-2">
+      <div class="p-2">
+        <StateHeader />
+      </div>
+      
+      <div class="p-2">
+        <Autocheck/>
+      </div>
+    </div>
+    
   </div>
 
 </main>

@@ -1,28 +1,47 @@
 <script lang="ts">
-  import { CheckState, CurrentStateSingleton } from "./data-models";
+  import moment, { type Moment } from "moment";
+  import { onDestroy, onMount } from "svelte";
+  import {
+    CheckEventImpl,
+    CheckState,
+    getApiInstance,
+    type CheckEvent,
+  } from "./timetracker_api";
 
-  export let state: CheckState;
+  let idSubscriber: number;
+  let state: CheckState;
+  let stateStr: string;
 
-  $: stateStr = state == CheckState.CheckedIn ? "dins" : "fora";
+  onMount(() => {
+    updateState();
+    idSubscriber = getApiInstance().subscribeToChanges(updateState);
+  });
+  onDestroy(() => {
+    getApiInstance().unSubscribeToChanges(idSubscriber);
+  });
+  function updateState(event?: CheckEvent) {
+    if (event == undefined) {
+      event = new CheckEventImpl(null, getApiInstance().currentState);
+    }
+    state = event.currentState;
+    if (state == CheckState.CheckedInState) {
+      var temps : string;
 
-  function handleMessage(event) {
-    state = event.value;
+      temps = moment(getApiInstance().lastChange).locale("ca").fromNow();
+      stateStr = `Ets a dins des de fa ${temps}`;
+    } else {
+      stateStr = "Ets a fora";
+    }
   }
 </script>
 
-<h1
-  class:state-dins={state === CheckState.CheckedIn}
-  class:state-fora={state === CheckState.CheckedOut}
+<div
+  class="card"
+  class:bg-warning={state === CheckState.CheckedInState}
+  class:text-bg-success={state === CheckState.CheckedOutState}
 >
-  Ara ets {stateStr}
-</h1>
-
-<style>
-  .state-dins {
-    background-color: orange;
-  }
-
-  .state-fora {
-    background-color: green;
-  }
-</style>
+  <div class="card-body">
+    <h5 class="card-title">{stateStr}</h5>
+    <p class="card-text" />
+  </div>
+</div>
