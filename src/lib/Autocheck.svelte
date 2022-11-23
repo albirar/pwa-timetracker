@@ -1,11 +1,13 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
+
   import {
-    CheckEventImpl,
     CheckState,
     getApiInstance,
     type CheckEvent,
   } from "./timetracker_api";
+  // "@albirar.cat/timetracker-ts";
+  
 
   let idSubscriber: number;
   let state: CheckState;
@@ -21,9 +23,10 @@
 
   function updateState(event?: CheckEvent) {
     if (event == undefined) {
-      event = new CheckEventImpl(null, getApiInstance().currentState);
+      state = getApiInstance().currentState;
+    } else {
+      state = event.currentState;
     }
-    state = event.currentState;
     if (state == CheckState.CheckedInState) {
       operationStr = "sortir";
     } else {
