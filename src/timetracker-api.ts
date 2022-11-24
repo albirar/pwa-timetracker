@@ -254,10 +254,9 @@ class ApiCheckRegisterImpl implements ApiCheckRegister {
                         }
                     }
                 }
-                if(lastReg.checkOperation == CheckOperation.CheckInOperation) {
+                if(lastReg != undefined && lastReg.checkOperation === CheckOperation.CheckInOperation) {
                     totalT += Date.now() - lastReg.moment;
                 }
-                console.debug(`Per a ${temporalFrame}: ${totalT}`);
                 resolve(totalT);
             }).catch((reason) => {
                 reject(reason);

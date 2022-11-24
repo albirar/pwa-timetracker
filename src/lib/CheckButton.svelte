@@ -17,8 +17,8 @@
   onDestroy(unsubscribe);
 </script>
 
-<button on:click={autocheck} 
-  class:text-bg-success={state === CheckState.CheckedInState} 
-  class:bg-warning={state === CheckState.CheckedOutState}>
+<button on:click={autocheck} class="btn"
+  class:btn-outline-success={state === CheckState.CheckedInState} 
+  class:btn-warning={state === CheckState.CheckedOutState}>
   {textButo}
 </button>

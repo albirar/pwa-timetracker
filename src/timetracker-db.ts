@@ -84,7 +84,7 @@
              try {
                  const tx = objectStore.transaction;
                  tx.onerror = (ev) => {
-                     console.log(`Error: ${ev.type} at ${ev.timeStamp}`);
+                     console.error(`Error: ${ev.type} at ${ev.timeStamp}`);
                  }
                  const request = objectStore.add({object: register});
                  request.onerror = () => {
@@ -95,7 +95,7 @@
                      resolve(register);
                  }
              } catch (e) {
-                 console.log(`Error: ${e}`);
+                 console.error(`Error: ${e}`);
              } finally {
  
              }

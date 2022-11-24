@@ -52,7 +52,7 @@
     minutes = Math.floor(total / 60000);
     hours = Math.floor(minutes / 60);
     minutes = minutes % 60;
-    return hours + ":" + minutes;
+    return String(hours).padStart(2, '0') + ":" + String(minutes).padStart(2, '0');
   }
 </script>
 
